@@ -1,4 +1,4 @@
-////
+<!--
  *
  * Copyright (c) 2023 Project CHIP Authors
  *
@@ -13,16 +13,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-////
-= CHIP Official Certification Tests
-ifdef::env-github[]
-:tip-caption: :bulb:
-:note-caption: :information_source:
-:important-caption: :heavy_exclamation_mark:
-:caution-caption: :fire:
-:warning-caption: :warning:
-endif::[]
+-->
 
-This repository is for the CHIP Official Certification Tests.  More coming Soon!
+# Matter Certification Tests
 
-These tests scripts should be loaded into the `test_collections` folder of the CHIP Test Harness backend.
+This repository is for some Matter Certification Tests.
+
+These tests scripts should be loaded into the `test_collections` folder of the CSA Test Harness backend.
