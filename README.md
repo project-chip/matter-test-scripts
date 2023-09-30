@@ -20,3 +20,9 @@
 This repository is for some Matter Certification Tests.
 
 These tests scripts should be loaded into the `test_collections` folder of the CSA Test Harness backend.
+
+# Instructions
+
+Please refer to the main repository for how to use these tools [here](https://github.com/project-chip/certification-tool-frontend)
+
+https://github.com/project-chip/certification-tool-frontend
