@@ -25,7 +25,7 @@ class TCDD11(PayloadParsingTestBaseClass):
         "version": "0.0.1",
         "title": "TC-DD-1.1",
         "description": """This test case verifies that the
-        onboarding QR code payload contains the necessary 
+        onboarding QR code payload contains the necessary
         information to onboard the device onto the CHIP network.""",
     }
 
