@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from test_collections.sdk_tests.support.chip_tool import ChipTool, ChipToolTestType
-from test_collections.sdk_tests.support.chip_tool.chip_tool import CHIP_TOOL_EXE
 from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models.test_case import TestCase
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
 from app.user_prompt_support.user_prompt_support import UserPromptSupport
+from test_collections.sdk_tests.support.chip_tool import ChipTool, ChipToolTestType
+from test_collections.sdk_tests.support.chip_tool.chip_tool import CHIP_TOOL_EXE
 
 PROMPT_TIMEOUT = 60
 
