@@ -118,7 +118,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             raise PayloadParsingError(
                 f"Error decoding onboarding payload. Error {error}"
             )
-        chip_tool.destroy_device()
+        await chip_tool.destroy_device()
         return parsed_payload
 
     def create_onboarding_code_payload_prompt(self, code_type: str) -> PromptRequest:
