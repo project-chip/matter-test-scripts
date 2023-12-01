@@ -58,7 +58,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         self, pairing_code: str, checksum_index: str
     ) -> bool:
         chip_tool = ChipTool()
-        await chip_tool.start_container(self.test_type)
+        await chip_tool.start_server(self.test_type)
         assert chip_tool.is_running()
         checksum_verify_command = "payload verhoeff-verify"
         result = chip_tool.send_command(
@@ -73,7 +73,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
 
     async def chip_tool_parse_onboarding_code(self, code_payload: str) -> ParsedPayload:
         chip_tool = ChipTool()
-        await chip_tool.start_container(self.test_type)
+        await chip_tool.start_server(self.test_type)
         assert chip_tool.is_running()
         qr_code_parse_command = "payload parse-setup-payload"
         result = chip_tool.send_command(
