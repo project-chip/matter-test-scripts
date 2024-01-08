@@ -17,8 +17,8 @@ from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models.test_case import TestCase
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
 from app.user_prompt_support.user_prompt_support import UserPromptSupport
-from test_collections.sdk_tests.support.chip import ChipTestType, ChipTool
 from test_collections.sdk_tests.support.chip.chip_tool import CHIP_TOOL_EXE
+from test_collections.sdk_tests.support.sdk_container import SDKContainer
 
 PROMPT_TIMEOUT = 60
 
@@ -52,16 +52,15 @@ class InvalidManualPairingCode(Exception):
 
 
 class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
-    test_type = ChipTestType.CHIP_TOOL
+    sdk_container: SDKContainer = SDKContainer()
 
     async def chip_tool_manual_pairing_code_checksum_check(
         self, pairing_code: str, checksum_index: str
     ) -> bool:
-        chip_tool = ChipTool()
-        await chip_tool.start_container()
-        assert chip_tool.is_running()
+        await self.sdk_container.start()
+        assert self.sdk_container.is_running()
         checksum_verify_command = "payload verhoeff-verify"
-        result = chip_tool.send_command(
+        result = self.sdk_container.send_command(
             f"{checksum_verify_command} {pairing_code} {checksum_index}",
             prefix=CHIP_TOOL_EXE,
         )
@@ -72,11 +71,10 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             return True
 
     async def chip_tool_parse_onboarding_code(self, code_payload: str) -> ParsedPayload:
-        chip_tool = ChipTool()
-        await chip_tool.start_container()
-        assert chip_tool.is_running()
+        await self.sdk_container.start()
+        assert self.sdk_container.is_running()
         qr_code_parse_command = "payload parse-setup-payload"
-        result = chip_tool.send_command(
+        result = self.sdk_container.send_command(
             f"{qr_code_parse_command} {code_payload}", prefix=CHIP_TOOL_EXE
         )
         logger.info(f"chip-tool output : {result}")
@@ -118,7 +116,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             raise PayloadParsingError(
                 f"Error decoding onboarding payload. Error {error}"
             )
-        await chip_tool.destroy_device()
+        self.sdk_container.destroy()
         return parsed_payload
 
     def create_onboarding_code_payload_prompt(self, code_type: str) -> PromptRequest:
