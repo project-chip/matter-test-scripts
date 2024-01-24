@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from pathlib import Path
+# from pathlib import Path
 
-from app.test_engine.test_collection_discovery import test_collection_declaration
+# from app.test_engine.test_collection_discovery import test_collection_declaration
 
-COLLECTION_PATH = Path(__file__).parent
+# COLLECTION_PATH = Path(__file__).parent
 
-onboarding_payload_collection = test_collection_declaration(
-    COLLECTION_PATH, "Onboarding Payload Tests"
-)
+# onboarding_payload_collection = test_collection_declaration(
+#     COLLECTION_PATH, "Onboarding Payload Tests"
+# )
