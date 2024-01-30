@@ -21,6 +21,7 @@ from app.user_prompt_support.user_prompt_support import UserPromptSupport
 from ...sdk_tests.support.chip.chip_server import CHIP_TOOL_EXE
 from ...sdk_tests.support.sdk_container import SDKContainer
 
+
 PROMPT_TIMEOUT = 60
 
 
