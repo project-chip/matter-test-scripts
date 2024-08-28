@@ -22,6 +22,7 @@ from ...sdk_tests.support.chip.chip_server import CHIP_TOOL_EXE
 from ...sdk_tests.support.sdk_container import SDKContainer
 
 PROMPT_TIMEOUT = 60
+SPL_STR = "[SPL] "
 
 
 class ParsedPayload:
@@ -71,6 +72,19 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         else:
             return True
 
+    def __prepare_output_for_parse(self, result) -> list:
+        # The output for payload parse-setup-payload looks like this:
+        # '\x1b[0;32m[1724795389.413] [37:37] [SPL] ProductID:         32769\x1b[0m'
+        cmd_output = result.output.decode("utf-8")
+
+        # Remove color escape codes: \x1b[0;32m, \x1b[0m and \x1b[0;34m
+        cmd_output = cmd_output.replace("\x1b[0;32m", "")
+        cmd_output = cmd_output.replace("\x1b[0m", "")
+        cmd_output = cmd_output.replace("\x1b[0;34m", "")
+
+        cmd_output = cmd_output.split("\n")
+        return cmd_output
+
     async def chip_tool_parse_onboarding_code(self, code_payload: str) -> ParsedPayload:
         await self.sdk_container.start()
         assert self.sdk_container.is_running()
@@ -79,17 +93,24 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             f"{qr_code_parse_command} {code_payload}", prefix=CHIP_TOOL_EXE
         )
         logger.info(f"chip-tool output : {result}")
+
         try:
-            cmd_output = result.output.decode("utf-8").split("\n")
+            # Decode output, remove color escape codes and return output as array
+            cmd_output = self.__prepare_output_for_parse(result)
+
             parsed_attributes = {}
             parsed_payload = None
             for output_line in cmd_output:
-                attribute_details = output_line.split(": ")
+                attribute_details = output_line.split(":")
                 if len(attribute_details) == 3:
                     parameter_value = attribute_details[2]
                     if "(" in parameter_value:
                         parameter_value = parameter_value.split("(")[0]
-                    parsed_attributes[attribute_details[1]] = parameter_value
+                    attribute_name = attribute_details[1][
+                        attribute_details[1].index(SPL_STR)
+                        + len(SPL_STR) : len(attribute_details[1])
+                    ]
+                    parsed_attributes[attribute_name] = parameter_value
             if (
                 "Version" not in parsed_attributes
                 or "Discovery Bitmask" not in parsed_attributes
