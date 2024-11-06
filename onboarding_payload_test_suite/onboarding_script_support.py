@@ -54,7 +54,7 @@ class InvalidManualPairingCode(Exception):
 
 
 class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
-    sdk_container: SDKContainer = SDKContainer()
+    sdk_container: SDKContainer = SDKContainer(create_manager=False)
 
     async def chip_tool_manual_pairing_code_checksum_check(
         self, pairing_code: str, checksum_index: str
