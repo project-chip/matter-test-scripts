@@ -172,9 +172,9 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         logger.info("Verified QR code payload version: {bin(version)}")
 
     def payload_rendezvous_capabilities_bit_mask_check(
-        self, discovery_capabilities_bitmask: int
+        self, discovery_capabilities_bitmask: int, max_bit: int
     ) -> None:
-        if not (0 <= discovery_capabilities_bitmask <= 7):
+        if not (0 <= discovery_capabilities_bitmask <= max_bit):
             self.mark_step_failure(
                 f"""Invalid rendezvous capabilities bit mask,
                 detected value: {bin(discovery_capabilities_bitmask)}"""

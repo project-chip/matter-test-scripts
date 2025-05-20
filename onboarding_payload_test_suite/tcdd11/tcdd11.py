@@ -70,7 +70,7 @@ class TCDD11(PayloadParsingTestBaseClass):
         self.next_step()
         # Test step 2.b
         self.payload_rendezvous_capabilities_bit_mask_check(
-            qr_code_payload.rendezvousInfo
+            qr_code_payload.rendezvousInfo, 15
         )
         self.next_step()
         # Test step 2.c

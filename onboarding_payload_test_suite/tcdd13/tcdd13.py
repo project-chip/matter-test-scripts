@@ -74,7 +74,7 @@ class TCDD13(PayloadParsingTestBaseClass):
         self.next_step()
         # Test step 3.b
         self.payload_rendezvous_capabilities_bit_mask_check(
-            nfc_code_payload.rendezvousInfo
+            nfc_code_payload.rendezvousInfo, 15
         )
         self.next_step()
         # Test step 3.c
