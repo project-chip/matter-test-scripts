@@ -172,7 +172,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         logger.info("Verified QR code payload version: {bin(version)}")
 
     def payload_rendezvous_capabilities_bit_mask_check(
-        self, discovery_capabilities_bitmask: int, max_bit: int
+        self, discovery_capabilities_bitmask: int
     ) -> None:
         DISCOVERY_CAP_BLE = (1 << 1)
         DISCOVERY_CAP_IP = (1 << 2)
