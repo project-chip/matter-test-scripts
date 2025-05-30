@@ -174,7 +174,11 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
     def payload_rendezvous_capabilities_bit_mask_check(
         self, discovery_capabilities_bitmask: int
     ) -> None:
-        if not (0 <= discovery_capabilities_bitmask <= 7):
+        DISCOVERY_CAP_BLE = (1 << 1)
+        DISCOVERY_CAP_IP = (1 << 2)
+        DISCOVERY_CAP_PAF = (1 << 3)                
+        ALL_CAPABILITIES_MASK = DISCOVERY_CAP_BLE | DISCOVERY_CAP_IP | DISCOVERY_CAP_PAF
+        if ((discovery_capabilities_bitmask & ~ALL_CAPABILITIES_MASK) != 0) or ((discovery_capabilities_bitmask & ALL_CAPABILITIES_MASK) == 0):
             self.mark_step_failure(
                 f"""Invalid rendezvous capabilities bit mask,
                 detected value: {bin(discovery_capabilities_bitmask)}"""
