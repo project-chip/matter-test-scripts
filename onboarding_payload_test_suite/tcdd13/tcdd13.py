@@ -88,7 +88,7 @@ class TCDD13(PayloadParsingTestBaseClass):
         prompt_response = await self.invoke_prompt_and_get_str_response(prompt_request)
         logger.info(f"User input : {prompt_response}")
 
-        # Parsing the NFC oboarding code payload response
+        # Parsing the NFC onboarding code payload response
         nfc_code_payload = await self.chip_tool_parse_onboarding_code(prompt_response)
         logger.info(f"Parsed payload : {nfc_code_payload}")
 
