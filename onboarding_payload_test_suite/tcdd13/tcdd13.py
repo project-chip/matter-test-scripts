@@ -65,10 +65,6 @@ class TCDD13(PayloadParsingTestBaseClass):
             TestStep("""Step3.d: Verify the onboarding payload contains a 27-bit Passcode\
                      - Verify the 27-bit unsigned integer encodes an 8-digit decimal numeric value and shall be a value between 0x0000001 to 0x5f5e0fe (00000001 to 99999998)"""),
 
-            TestStep("""Step3.e: Verify passcode is valid\
-                     - Verify passcode does not use any trivial values: 00000000, 11111111, 22222222, 33333333, 44444444, 55555555, 66666666, 77777777, 88888888, 99999999, 12345678, 87654321\
-                     - Verify Passcode is not derived from public information as serial number, manufacturer date, MAC address, region of origin etc."""),
-
             TestStep("""Step3.f: Verify NFC's onboarding payload code prefix\
                      - Verify NFC's onboarding payload code prefix is "MT:"""),
 
@@ -96,44 +92,44 @@ class TCDD13(PayloadParsingTestBaseClass):
         nfc_code_payload = await self.chip_tool_parse_onboarding_code(prompt_response)
         logger.info(f"Parsed payload : {nfc_code_payload}")
 
-        self.next_step()
         # Test step 3.a
+        self.next_step()
         logger.info("Verifying the NFC's onboarding payload code version...")
         self.payload_version_check(nfc_code_payload.version)
-    
-        self.next_step()
+
         # Test step 3.b
+        self.next_step()
         logger.info("Verifying the 8-bit Discovery Capabilities bit mask...")
         self.payload_rendezvous_capabilities_bit_mask_check(
             nfc_code_payload.rendezvousInfo
         )
 
-        self.next_step()
         # Test step 3.c
+        self.next_step()
         logger.info("Verifying the 12-bit discriminator bit mask...")
         # TODO Extract discriminator from device advertises frame Issue#186
         await self.payload_discriminator_check(nfc_code_payload.discriminator)
 
-        self.next_step()
         # Test step 3.d
+        self.next_step()
         logger.info("Verifying the onboarding payload contains a 27-bit passcode...")
         self.payload_passcode_check(nfc_code_payload.setUpPINCode)
 
-        self.next_step()
         # Test step 3.f
-        logger.info("Verifying passcode is valid...")
+        self.next_step()
+        logger.info("Verifying NFC's onboarding payload code prefix...")
         nfc_code_prefix = prompt_response[:3]
         self.payload_prefix_check(nfc_code_prefix)
 
-        self.next_step()
         # Test step 3.g
+        self.next_step()
         logger.info("Verifying Vendor ID and Product ID...")
         self.vendorid_productid_check(
             nfc_code_payload.vendorID, nfc_code_payload.productID
         )
 
-        self.next_step()
         # Test step 5
+        self.next_step()
         logger.info("Verifying custom payload support...")
         self.custom_payload_support_check(nfc_code_payload.commissioningFlow)
 
