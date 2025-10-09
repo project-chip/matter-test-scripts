@@ -53,7 +53,7 @@ class TCDD11(PayloadParsingTestBaseClass):
             TestStep("""Step2.c: Verify the Custom Flow bit
                      - Verify the Custom Flow bit has one of the following values: 0, 1 or 2"""),
 
-            TestStep(""""Step2.d: Verify 8-bit Discovery Capabilities bit mask
+            TestStep("""Step2.d: Verify 8-bit Discovery Capabilities bit mask
                      Verify that the onboarding payload contains an 8-bit Discovery Capabilities bitmask. Each bit must represent the following transport support:
 
                      - Bit 0 - Reserved (SHALL be 0)
