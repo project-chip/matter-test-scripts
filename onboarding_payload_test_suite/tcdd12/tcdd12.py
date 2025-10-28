@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from app.models.test_enums import TestStateEnum
+from app.models import TestStateEnum
 from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models import TestStep
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
