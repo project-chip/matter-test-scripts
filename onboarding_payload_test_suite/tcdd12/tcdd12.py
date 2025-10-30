@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023 Project CHIP Authors
+# Copyright (c) 2025 Project CHIP Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from app.models.test_enums import TestStateEnum
+from app.models import TestStateEnum
 from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models import TestStep
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
@@ -196,3 +196,4 @@ class TCDD12(PayloadParsingTestBaseClass):
             timeout=PROMPT_TIMEOUT,
         )
         return prompt_request
+
