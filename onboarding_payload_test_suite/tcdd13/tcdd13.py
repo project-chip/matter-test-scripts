@@ -46,11 +46,11 @@ class TCDD13(PayloadParsingTestBaseClass):
                      and bring the NFC code reader close to the DUT"
             ),
             TestStep(
-                """Step3.a: Verify the NFC's onboarding payload code version\
-                     - Verify the NFC's onboarding payload code version is '000'"""
+                "Step3.a: Verify the NFC's onboarding payload code version"
+                " - Verify the NFC's onboarding payload code version is '000'"
             ),
             TestStep(
-                """Step3.b: Verify 8-bit Discovery Capabilities bit mask\
+                """Step3.b: Verify 8-bit Discovery Capabilities bit mask
                 Verify that the onboarding payload contains an 8-bit Discovery Capabilities bitmask. Each bit must represent the following transport support:
 
                 - Bit 0 - Reserved (SHALL be 0)\
