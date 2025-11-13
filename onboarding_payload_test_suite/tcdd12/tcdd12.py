@@ -196,4 +196,3 @@ class TCDD12(PayloadParsingTestBaseClass):
             timeout=PROMPT_TIMEOUT,
         )
         return prompt_request
-

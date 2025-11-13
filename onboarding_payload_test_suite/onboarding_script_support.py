@@ -178,7 +178,9 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         DISCOVERY_CAP_IP = 1 << 2
         DISCOVERY_CAP_PAF = 1 << 3
         DISCOVERY_CAP_NTL = 1 << 4
-        ALL_CAPABILITIES_MASK = DISCOVERY_CAP_BLE | DISCOVERY_CAP_IP | DISCOVERY_CAP_PAF | DISCOVERY_CAP_NTL
+        ALL_CAPABILITIES_MASK = (
+            DISCOVERY_CAP_BLE | DISCOVERY_CAP_IP | DISCOVERY_CAP_PAF | DISCOVERY_CAP_NTL
+        )
 
         if ((discovery_capabilities_bitmask & ~ALL_CAPABILITIES_MASK) != 0) or (
             (discovery_capabilities_bitmask & ALL_CAPABILITIES_MASK) == 0
