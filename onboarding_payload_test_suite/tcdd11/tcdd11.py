@@ -148,7 +148,7 @@ class TCDD11(PayloadParsingTestBaseClass):
         # Verify the packed binary data structure
         self.next_step()
         logger.info("Verifying the packed binary data structure...")
-        # TODO: Step exists in test plan but is not implemented
+        self.payload_padding_check(prompt_response)
 
 
     async def cleanup(self) -> None:
