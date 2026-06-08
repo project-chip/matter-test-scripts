@@ -45,11 +45,12 @@ class TCDD13(PayloadParsingTestBaseClass):
                 "Step1: Power up the DUT and put the DUT in pairing mode\
                      and bring the NFC code reader close to the DUT"
             ),
-
-            TestStep("""Step3.a: Verify the NFC's onboarding payload code version\
-                     - Verify the NFC's onboarding payload code version is '000'"""),
-
-            TestStep("""Step3.b: Verify 8-bit Discovery Capabilities bit mask\
+            TestStep(
+                "Step3.a: Verify the NFC's onboarding payload code version"
+                " - Verify the NFC's onboarding payload code version is '000'"
+            ),
+            TestStep(
+                """Step3.b: Verify 8-bit Discovery Capabilities bit mask
                 Verify that the onboarding payload contains an 8-bit Discovery Capabilities bitmask. Each bit must represent the following transport support:
 
                 - Bit 0 - Reserved (SHALL be 0)\
@@ -58,22 +59,28 @@ class TCDD13(PayloadParsingTestBaseClass):
                 - Bits 3 - Wi-Fi Public Action Frame: - 0: Device does not support Wi-Fi Public Action Frame for discovery or is currently commissioned into one or more fabrics. - 1: Device supports Wi-Fi Public Action Frame for discovery when not commissioned.\
                 - Bit 4 - NFC Transport Layer:  - 0: Device does not support NFC Transport Layer (NTL) for commissioning or is currently commissioned into one or more fabrics. - 1: Device supports NFC Transport Layer (NTL) for commissioning when not commissioned.\
                 - Bits 7-5 - Reserved (SHALL be 0)\
-                - Ensure that the bitmask accurately reflects the DUT’s supported commissioning methods and no reserved bits are set."""),
-
-            TestStep("""Step3.c: Verify the 12-bit discriminator bit mask\
-                     - Verify the 12-bit discriminator matches the value which a device advertises during commissioning."""),
-
-            TestStep("""Step3.d: Verify the onboarding payload contains a 27-bit Passcode\
-                     - Verify the 27-bit unsigned integer encodes an 8-digit decimal numeric value and shall be a value between 0x0000001 to 0x5f5e0fe (00000001 to 99999998)"""),
-
-            TestStep("""Step3.f: Verify NFC's onboarding payload code prefix\
-                     - Verify NFC's onboarding payload code prefix is "MT:"""),
-
-            TestStep("""Step3.g: Verify Vendor ID and Product ID\
-                     - Verify Vendor ID and Product ID match the values submitted by manufacturer in Distributed Compliance Ledger"""),
-
-            TestStep("""Step5: Verify Custom payload support\
-                     - Verify the custom payload is a 2 bit field and the Values supported are 0, 1 and 2."""),
+                - Ensure that the bitmask accurately reflects the DUT’s supported commissioning methods and no reserved bits are set."""
+            ),
+            TestStep(
+                """Step3.c: Verify the 12-bit discriminator bit mask\
+                     - Verify the 12-bit discriminator matches the value which a device advertises during commissioning."""
+            ),
+            TestStep(
+                """Step3.d: Verify the onboarding payload contains a 27-bit Passcode\
+                     - Verify the 27-bit unsigned integer encodes an 8-digit decimal numeric value and shall be a value between 0x0000001 to 0x5f5e0fe (00000001 to 99999998)"""
+            ),
+            TestStep(
+                """Step3.f: Verify NFC's onboarding payload code prefix\
+                     - Verify NFC's onboarding payload code prefix is "MT:"""
+            ),
+            TestStep(
+                """Step3.g: Verify Vendor ID and Product ID\
+                     - Verify Vendor ID and Product ID match the values submitted by manufacturer in Distributed Compliance Ledger"""
+            ),
+            TestStep(
+                """Step5: Verify Custom payload support\
+                     - Verify the custom payload is a 2 bit field and the Values supported are 0, 1 and 2."""
+            ),
         ]
 
     async def setup(self) -> None:
