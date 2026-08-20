@@ -19,7 +19,6 @@ from app.test_engine.models import TestStep
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
 
 from ..onboarding_script_support import (
-    PROMPT_TIMEOUT,
     InvalidManualPairingCode,
     PayloadParsingTestBaseClass,
 )
@@ -191,8 +190,5 @@ class TCDD12(PayloadParsingTestBaseClass):
             "prompt": "Please enter the Manual pairing code",
             "placeholder_text": "34970112332",
         }
-        prompt_request = TextInputPromptRequest(
-            **text_input_param,
-            timeout=PROMPT_TIMEOUT,
-        )
+        prompt_request = TextInputPromptRequest(**text_input_param)
         return prompt_request

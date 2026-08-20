@@ -84,10 +84,7 @@ class TCDD14(TestCase, UserPromptSupport):
             "prompt": "Please enter the concatenated QR code payload",
             "placeholder_text": "MT:YNJV75HZ00KA0648G00*W0GU2OTB00KA0648G00",
         }
-        prompt_request = TextInputPromptRequest(
-            **text_input_param,
-            timeout=60,
-        )
+        prompt_request = TextInputPromptRequest(**text_input_param)
         return prompt_request
 
     def _create_dut_count_prompt(self) -> PromptRequest:
@@ -95,8 +92,5 @@ class TCDD14(TestCase, UserPromptSupport):
             "prompt": "Please specify the number of devices that will be on-boarded.",
             "placeholder_text": "0x2",
         }
-        prompt_request = TextInputPromptRequest(
-            **text_input_param,
-            timeout=60,
-        )
+        prompt_request = TextInputPromptRequest(**text_input_param)
         return prompt_request
