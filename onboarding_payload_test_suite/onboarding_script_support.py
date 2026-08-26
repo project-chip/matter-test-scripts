@@ -21,7 +21,6 @@ from app.user_prompt_support.user_prompt_support import UserPromptSupport
 from ...sdk_tests.support.chip.chip_server import CHIP_TOOL_EXE
 from ...sdk_tests.support.sdk_container import SDKContainer
 
-PROMPT_TIMEOUT = 60
 SPL_STR = "[SPL] "
 
 
@@ -146,10 +145,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             "prompt": f"Please enter the {code_type} code payload",
             "placeholder_text": "MT:YNJV75HZ00KA0648G00",
         }
-        prompt_request = TextInputPromptRequest(
-            **text_input_param,
-            timeout=PROMPT_TIMEOUT,
-        )
+        prompt_request = TextInputPromptRequest(**text_input_param)
         return prompt_request
 
     def create_discriminator_prompt(self) -> PromptRequest:
@@ -157,10 +153,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             "prompt": "Please enter 12-bit discriminator from the device advertisement",
             "placeholder_text": "0xF00",
         }
-        prompt_request = TextInputPromptRequest(
-            **text_input_param,
-            timeout=PROMPT_TIMEOUT,
-        )
+        prompt_request = TextInputPromptRequest(**text_input_param)
         return prompt_request
 
     def payload_version_check(self, version: int) -> None:
