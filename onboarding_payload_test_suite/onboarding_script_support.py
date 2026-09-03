@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from app.core.config import settings
+from app.schemas.test_environment_config import get_th_config_value
 from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models.test_case import TestCase
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
@@ -62,8 +63,7 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         The project's th_config.enable_container_logs, when explicitly set,
         overrides the instance-wide ENABLE_CONTAINER_LOGS env var.
         """
-        th_config = (self.config or {}).get("th_config") or {}
-        override = th_config.get("enable_container_logs")
+        override = get_th_config_value(self.config, "enable_container_logs")
         if override is not None:
             return bool(override)
         return settings.ENABLE_CONTAINER_LOGS
