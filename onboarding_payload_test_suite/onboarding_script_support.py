@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Optional
+
 from app.core.config import settings
 from app.schemas.test_environment_config import get_th_config_value
 from app.test_engine.logger import test_engine_logger as logger
@@ -57,13 +59,23 @@ class InvalidManualPairingCode(Exception):
 class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
     sdk_container: SDKContainer = SDKContainer()
 
+    def _safe_config(self) -> Optional[dict]:
+        """`.config`, or None if it's unavailable (e.g. a test double with no
+        wired-up project/execution chain). Used by the th_config resolvers below,
+        whose contract is to fall back to the env var default rather than raise
+        when project config can't be determined."""
+        try:
+            return self.config
+        except Exception:
+            return None
+
     def _container_logs_enabled(self) -> bool:
         """Whether container-operation logging is enabled.
 
         The project's th_config.enable_container_logs, when explicitly set,
         overrides the instance-wide ENABLE_CONTAINER_LOGS env var.
         """
-        override = get_th_config_value(self.config, "enable_container_logs")
+        override = get_th_config_value(self._safe_config(), "enable_container_logs")
         if override is not None:
             return bool(override)
         return settings.ENABLE_CONTAINER_LOGS
