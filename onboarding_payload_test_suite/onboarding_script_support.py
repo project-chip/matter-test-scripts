@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Optional
+
+from app.core.config import settings
+from app.schemas.test_environment_config import get_th_config_value
 from app.test_engine.logger import test_engine_logger as logger
 from app.test_engine.models.test_case import TestCase
 from app.user_prompt_support import PromptRequest, TextInputPromptRequest
@@ -55,15 +59,39 @@ class InvalidManualPairingCode(Exception):
 class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
     sdk_container: SDKContainer = SDKContainer()
 
+    def _safe_config(self) -> Optional[dict]:
+        """`.config`, or None if it's unavailable (e.g. a test double with no
+        wired-up project/execution chain). Used by the th_config resolvers below,
+        whose contract is to fall back to the env var default rather than raise
+        when project config can't be determined."""
+        try:
+            return self.config
+        except Exception:
+            return None
+
+    def _container_logs_enabled(self) -> bool:
+        """Whether container-operation logging is enabled.
+
+        The project's th_config.enable_container_logs, when explicitly set,
+        overrides the instance-wide ENABLE_CONTAINER_LOGS env var.
+        """
+        override = get_th_config_value(self._safe_config(), "enable_container_logs")
+        if override is not None:
+            return bool(override)
+        return settings.ENABLE_CONTAINER_LOGS
+
     async def chip_tool_manual_pairing_code_checksum_check(
         self, pairing_code: str, checksum_index: str
     ) -> bool:
-        await self.sdk_container.start()
+        await self.sdk_container.start(
+            enable_container_logs=self._container_logs_enabled()
+        )
         assert self.sdk_container.is_running()
         checksum_verify_command = "payload verhoeff-verify"
         result = self.sdk_container.send_command(
             f"{checksum_verify_command} {pairing_code} {checksum_index}",
             prefix=CHIP_TOOL_EXE,
+            enable_container_logs=self._container_logs_enabled(),
         )
         logger.info(f"chip-tool output : {result}")
         if "INVALID" in result.output.decode("utf-8"):
@@ -85,11 +113,15 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         return cmd_output
 
     async def chip_tool_parse_onboarding_code(self, code_payload: str) -> ParsedPayload:
-        await self.sdk_container.start()
+        await self.sdk_container.start(
+            enable_container_logs=self._container_logs_enabled()
+        )
         assert self.sdk_container.is_running()
         qr_code_parse_command = "payload parse-setup-payload"
         result = self.sdk_container.send_command(
-            f"{qr_code_parse_command} {code_payload}", prefix=CHIP_TOOL_EXE
+            f"{qr_code_parse_command} {code_payload}",
+            prefix=CHIP_TOOL_EXE,
+            enable_container_logs=self._container_logs_enabled(),
         )
         logger.info(f"chip-tool output : {result}")
 
@@ -137,7 +169,9 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
             raise PayloadParsingError(
                 f"Error decoding onboarding payload. Error {error}"
             )
-        self.sdk_container.destroy()
+        self.sdk_container.destroy(
+            enable_container_logs=self._container_logs_enabled()
+        )
         return parsed_payload
 
     def create_onboarding_code_payload_prompt(self, code_type: str) -> PromptRequest:
