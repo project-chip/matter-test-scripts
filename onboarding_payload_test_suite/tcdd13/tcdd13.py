@@ -56,9 +56,10 @@ class TCDD13(PayloadParsingTestBaseClass):
                 - Bit 0 - Reserved (SHALL be 0)\
                 - Bit 1 - BLE: - 0: Device does not support BLE for discovery or is currently commissioned into one or more fabrics. - 1: Device supports BLE for discovery when not commissioned.\
                 - Bit 2 - On IP network: - 1: Device is already on the IP network\
-                - Bits 3 - Wi-Fi Public Action Frame: - 0: Device does not support Wi-Fi Public Action Frame for discovery or is currently commissioned into one or more fabrics. - 1: Device supports Wi-Fi Public Action Frame for discovery when not commissioned.\
+                - Bit 3 - Wi-Fi Public Action Frame: - 0: Device does not support Wi-Fi Public Action Frame for discovery or is currently commissioned into one or more fabrics. - 1: Device supports Wi-Fi Public Action Frame for discovery when not commissioned.\
                 - Bit 4 - NFC Transport Layer:  - 0: Device does not support NFC Transport Layer (NTL) for commissioning or is currently commissioned into one or more fabrics. - 1: Device supports NFC Transport Layer (NTL) for commissioning when not commissioned.\
-                - Bits 7-5 - Reserved (SHALL be 0)\
+                - Bit 5 - Thread Commissioning Protocol:  - 0: Device does not support Thread Commissioning Protocol for commissioning or is currently commissioned into one or more fabrics. - 1: Device supports Thread Commissioning Protocol for commissioning when not commissioned.\
+                - Bits 7-6 - Reserved (SHALL be 0)\
                 - Ensure that the bitmask accurately reflects the DUT’s supported commissioning methods and no reserved bits are set."""
             ),
             TestStep(
