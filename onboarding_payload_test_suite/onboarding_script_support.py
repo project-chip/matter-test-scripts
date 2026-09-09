@@ -27,6 +27,77 @@ from ...sdk_tests.support.sdk_container import SDKContainer
 
 SPL_STR = "[SPL] "
 
+# Matter base38 alphabet
+_BASE38_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-."
+
+# Maps base38 chunk length to the number of bytes it represents.
+_BASE38_CHUNK_BYTES = {5: 3, 4: 2, 2: 1}
+
+
+def _base38_decode(encoded: str) -> bytes:
+    """Decode a Matter base38-encoded string to raw bytes.
+
+    Matter base38 encodes groups of bytes as follows:
+      - 3 bytes -> 5 characters
+      - 2 bytes -> 4 characters
+      - 1 byte  -> 2 characters
+
+    Characters within each chunk are ordered from least-significant to
+    most-significant value, matching the Matter spec packing convention.
+
+    Args:
+        encoded: A base38-encoded string using the Matter alphabet
+                 (``0-9``, ``A-Z``, ``-``, ``.``), without the ``MT:`` prefix.
+
+    Returns:
+        The decoded payload as a :class:`bytes` object.
+
+    Raises:
+        ValueError: If ``encoded`` contains a character outside the base38
+                    alphabet, or if a chunk length is not 2, 4, or 5.
+    """
+    result = bytearray()
+    i = 0
+    n = len(encoded)
+
+    while i < n:
+        remaining = n - i
+        if remaining >= 5:
+            chunk_size = 5
+        elif remaining == 4:
+            chunk_size = 4
+        elif remaining == 2:
+            chunk_size = 2
+        else:
+            raise ValueError(
+                f"Unexpected remaining character count {remaining} at position {i}; "
+                "valid trailing chunk sizes are 2 or 4."
+            )
+
+        chunk = encoded[i: i + chunk_size]
+
+        # Decode: characters are ordered LSB -> MSB, so accumulate with
+        # increasing powers of 38.
+        value = 0
+        multiplier = 1
+        for c in chunk:
+            idx = _BASE38_ALPHABET.find(c)
+            if idx == -1:
+                raise ValueError(
+                    f"Character '{c}' at position {i} is not in the base38 alphabet."
+                )
+            value += idx * multiplier
+            multiplier *= 38
+
+        # Extract little-endian bytes.
+        for _ in range(_BASE38_CHUNK_BYTES[chunk_size]):
+            result.append(value & 0xFF)
+            value >>= 8
+
+        i += chunk_size
+
+    return bytes(result)
+
 
 class ParsedPayload:
     def __init__(
@@ -274,6 +345,50 @@ class PayloadParsingTestBaseClass(TestCase, UserPromptSupport, object):
         logger.info(
             f"""TODO: Verified Vendor ID and Product ID, VID:{vendor_id},
             PID:{product_id}"""
+        )
+
+    def payload_padding_check(self, qr_code_str: str) -> None:
+        """Verify that the packed binary data structure ends with zero padding bits.
+
+        Per the Matter spec, the fixed onboarding payload fields total 84 bits
+        (3 version + 16 VID + 16 PID + 2 custom-flow + 8 discovery + 12 discriminator
+        + 27 passcode). The structure is padded to the nearest byte boundary (88 bits =
+        11 bytes) by appending 4 zero bits. Those padding bits occupy the upper nibble
+        of byte 10 of the decoded payload.
+
+        Args:
+            qr_code_str: The raw QR code string including the 'MT:' prefix.
+        """
+        # Strip 'MT:' prefix
+        encoded = qr_code_str[3:]
+
+        # Decode the base38-encoded QR code string
+        try:
+            raw_bytes = _base38_decode(encoded)
+        except ValueError as e:
+            self.mark_step_failure(f"Failed to base38-decode QR code payload: {e}")
+            return
+
+        # Fail step if decoded payload is less than 11 bytes
+        if len(raw_bytes) < 11:
+            self.mark_step_failure(
+                f"Decoded QR code payload is {len(raw_bytes)} byte(s); "
+                "expected at least 11 for the fixed-size structure."
+            )
+            return
+
+        # Fail step if padding bits are not zero
+        padding_bits = (raw_bytes[10] >> 4) & 0x0F
+        if padding_bits != 0:
+            self.mark_step_failure(
+                f"Packed binary data structure padding bits are not zero: "
+                f"byte 10 = {bin(raw_bytes[10])} (upper nibble = {hex(padding_bits)})"
+            )
+            return
+
+        logger.info(
+            f"Verified packed binary data structure padding: "
+            f"byte 10 = {bin(raw_bytes[10])}, padding nibble = 0x0"
         )
 
     def custom_payload_support_check(self, commissioningFlow: int) -> None:
